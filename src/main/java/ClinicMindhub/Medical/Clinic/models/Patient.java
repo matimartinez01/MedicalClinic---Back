@@ -13,7 +13,11 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName, lastName, email, password, genre;
+    private String firstName, lastName, email, password;
+
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
+
 
     private LocalDate birthDate;
 
@@ -25,7 +29,7 @@ public class Patient {
 
     }
 
-    public Patient(String firstName, String lastName, String email, String password, String genre, LocalDate birthDate) {
+    public Patient(String firstName, String lastName, String email, String password, Genre genre, LocalDate birthDate) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -71,11 +75,11 @@ public class Patient {
         this.password = password;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
