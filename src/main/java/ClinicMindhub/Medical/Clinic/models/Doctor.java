@@ -14,8 +14,8 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName, lastName, genre;
-
+    private String firstName, lastName, email, password;
+    private Genre genre;
     @Enumerated(EnumType.STRING)
     private MedicalSpeciality speciality;
 
@@ -23,17 +23,23 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments = new ArrayList<>();
 
-    private List <LocalDateTime> schedule = new ArrayList<>();
+    private List <String> workDays = new ArrayList<>();
+
+    private List <Integer> hours = new ArrayList<>();
 
     public Doctor() {
 
     }
 
-    public Doctor(String firstName, String lastName, String genre, MedicalSpeciality speciality) {
+    public Doctor(String firstName, String lastName, Genre genre, MedicalSpeciality speciality, List<String> workDays, List<Integer> hours, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.genre = genre;
         this.speciality = speciality;
+        this.workDays = workDays;
+        this.hours = hours;
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
@@ -57,11 +63,11 @@ public class Doctor {
         this.lastName = lastName;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
@@ -83,12 +89,36 @@ public class Doctor {
         appointments.add(appointment);
     }
 
-    public List<LocalDateTime> getSchedule() {
-        return schedule;
+    public List<String> getWorkDays() {
+        return workDays;
     }
 
-    public void setSchedule(List<LocalDateTime> schedule) {
-        this.schedule = schedule;
+    public void setWorkDays(List<String> workDays) {
+        this.workDays = workDays;
+    }
+
+    public List<Integer> getHours() {
+        return hours;
+    }
+
+    public void setHours(List<Integer> hours) {
+        this.hours = hours;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

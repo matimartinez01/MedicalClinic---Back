@@ -60,7 +60,7 @@ public class Appointment {
         return patient;
     }
 
-    public void setPatient(Patient patients) {
+    public void setPatient(Patient patient) {
         this.patient = patient;
     }
 
