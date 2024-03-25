@@ -1,9 +1,6 @@
 package ClinicMindhub.Medical.Clinic.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,17 +16,21 @@ public class Appointment {
 
     private LocalDate date;
 
-    private LocalDateTime time;
+    private Integer time;
 
-    List<Patient> patients = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
-    List <Doctor> doctors = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
     public Appointment() {
 
     }
 
-    public Appointment(LocalDate date, LocalDateTime time) {
+    public Appointment(LocalDate date, Integer time) {
         this.date = date;
         this.time = time;
     }
@@ -47,29 +48,36 @@ public class Appointment {
         this.date = date;
     }
 
-    public LocalDateTime getTime() {
+    public Integer getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(Integer time) {
         this.time = time;
     }
 
-    public List<Patient> getPatients() {
-        return patients;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatients(List<Patient> patients) {
-        this.patients = patients;
+    public void setPatient(Patient patients) {
+        this.patient = patient;
     }
 
-    public List<Doctor> getDoctors() {
-        return doctors;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setDoctors(List<Doctor> doctors) {
-        this.doctors = doctors;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
-
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
+    }
 }

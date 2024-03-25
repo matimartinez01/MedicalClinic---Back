@@ -1,6 +1,11 @@
 package ClinicMindhub.Medical.Clinic;
 
+import ClinicMindhub.Medical.Clinic.models.Appointment;
+import ClinicMindhub.Medical.Clinic.models.Doctor;
+import ClinicMindhub.Medical.Clinic.models.MedicalSpeciality;
 import ClinicMindhub.Medical.Clinic.models.Patient;
+import ClinicMindhub.Medical.Clinic.repositories.AppointmentRepository;
+import ClinicMindhub.Medical.Clinic.repositories.DoctorRepository;
 import ClinicMindhub.Medical.Clinic.repositories.PatientRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,12 +24,25 @@ public class MedicalClinicApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PatientRepository patientRepository) {
+	public CommandLineRunner initData(PatientRepository patientRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository) {
 		return args -> {
 
 			Patient prueba1 = new Patient("Guillermo", "Pérez", "guilleperez@gmail.com", "guille1234", "male", LocalDate.of(1990, 1, 1));
+			Doctor doctor = new Doctor("Juan", "Rodriguez", "Hombre", MedicalSpeciality.CARDIOLOGIST);
+			Appointment appointment = new Appointment(LocalDate.now(), LocalDateTime.now().getHour());
+
+			prueba1.addAppointment(appointment);
+			doctor.addAppointment(appointment);
+
+			patientRepository.save(prueba1);
+			doctorRepository.save(doctor);
+			appointmentRepository.save(appointment);
+
+
 
 			System.out.println(prueba1);
+			System.out.println(doctor);
+			System.out.println(appointment);
 		};
 
 

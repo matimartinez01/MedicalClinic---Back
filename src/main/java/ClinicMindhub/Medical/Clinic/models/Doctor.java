@@ -19,6 +19,8 @@ public class Doctor {
     @Enumerated(EnumType.STRING)
     private MedicalSpeciality speciality;
 
+
+    @OneToMany(mappedBy = "doctor")
     private List<Appointment> appointments = new ArrayList<>();
 
     private List <LocalDateTime> schedule = new ArrayList<>();
@@ -75,8 +77,10 @@ public class Doctor {
         return appointments;
     }
 
-    public void setAppointments(List<Appointment> appointments) {
-        this.appointments = appointments;
+
+    public void addAppointment (Appointment appointment){
+        appointment.setDoctor(this);
+        appointments.add(appointment);
     }
 
     public List<LocalDateTime> getSchedule() {
@@ -87,4 +91,15 @@ public class Doctor {
         this.schedule = schedule;
     }
 
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", genre='" + genre + '\'' +
+                ", speciality=" + speciality +
+                ", appointments=" + appointments +
+                '}';
+    }
 }
