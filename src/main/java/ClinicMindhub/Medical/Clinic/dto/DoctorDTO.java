@@ -3,6 +3,7 @@ package ClinicMindhub.Medical.Clinic.dto;
 
 import ClinicMindhub.Medical.Clinic.models.Appointment;
 import ClinicMindhub.Medical.Clinic.models.Doctor;
+import ClinicMindhub.Medical.Clinic.models.Genre;
 import ClinicMindhub.Medical.Clinic.models.MedicalSpeciality;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,8 @@ import static java.util.stream.Collectors.toList;
 
     public class DoctorDTO {
         private Long id;
-        private String firstName, lastName, genre;
+        private String firstName, lastName;
+        private Genre genre;
         private MedicalSpeciality speciality;
         private List<AppointmentDTO> appointments = new ArrayList<>();
         private List <String> workDays = new ArrayList<>();
@@ -47,7 +49,7 @@ import static java.util.stream.Collectors.toList;
             return lastName;
         }
 
-        public String getGenre() {
+        public Genre getGenre() {
             return genre;
         }
 

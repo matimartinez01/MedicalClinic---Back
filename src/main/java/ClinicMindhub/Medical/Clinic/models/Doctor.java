@@ -14,8 +14,8 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName, lastName, genre, email, password;
-
+    private String firstName, lastName, email, password;
+    private Genre genre;
     @Enumerated(EnumType.STRING)
     private MedicalSpeciality speciality;
 
@@ -31,7 +31,7 @@ public class Doctor {
 
     }
 
-    public Doctor(String firstName, String lastName, String genre, MedicalSpeciality speciality, List<String> workDays, List<Integer> hours, String email, String password) {
+    public Doctor(String firstName, String lastName, Genre genre, MedicalSpeciality speciality, List<String> workDays, List<Integer> hours, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.genre = genre;
@@ -63,11 +63,11 @@ public class Doctor {
         this.lastName = lastName;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
