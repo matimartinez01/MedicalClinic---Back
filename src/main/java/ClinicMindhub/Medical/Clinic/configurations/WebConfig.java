@@ -36,7 +36,8 @@ public class WebConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/doctor/login", "/api/patient/register", "/api/patient/login").permitAll()
                         .requestMatchers("/api/patient/current", "/api/appointment/").hasAnyRole("PATIENT", "ADMIN")
-                        .requestMatchers("/api/doctor/all", "/api/patient/all", "/api/doctor/current").hasAnyRole("DOCTOR", "ADMIN")
+                        .requestMatchers("/api/doctor/all").hasAnyRole("PATIENT", "DOCTOR", "ADMIN")
+                        .requestMatchers("/api/patient/all", "/api/doctor/current").hasAnyRole("DOCTOR", "ADMIN")
                         .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
