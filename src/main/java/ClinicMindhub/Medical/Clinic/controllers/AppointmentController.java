@@ -12,6 +12,7 @@ import ClinicMindhub.Medical.Clinic.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -36,7 +37,8 @@ public class AppointmentController {
     public ResponseEntity<?> addAppointment(@RequestBody AppointmentRequestDTO appointmentDTO){
 
         Doctor doctor = doctorRepository.findByFirstNameAndLastName(appointmentDTO.firstName(), appointmentDTO.lastName());
-        Patient patient = patientRepository.findById(appointmentDTO.patientId()).orElse(null);
+        String patientEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Patient patient = patientRepository.findByEmail(patientEmail);
 
 
         if(appointmentDTO.firstName().isBlank()){
@@ -100,7 +102,7 @@ public class AppointmentController {
 
 
 
-        return new ResponseEntity<>(new DoctorDTO(doctor), HttpStatus.OK);
+        return new ResponseEntity<>(new AppointmentDTO(appointment), HttpStatus.OK);
     }
 
 

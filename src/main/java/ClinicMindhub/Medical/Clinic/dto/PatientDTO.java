@@ -22,8 +22,30 @@ public class PatientDTO {
         this.lastName = patient.getLastName();
         this.genre = patient.getGenre();
         this.birthDate = patient.getBirthDate();
-        for (Appointment appointment : patient.getAppointments()) {
-            this.appointments.add(new AppointmentDTO(appointment));
-        }
+        this.appointments = patient.getAppointments().stream().map(AppointmentDTO::new).toList();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public List<AppointmentDTO> getAppointments() {
+        return appointments;
     }
 }
