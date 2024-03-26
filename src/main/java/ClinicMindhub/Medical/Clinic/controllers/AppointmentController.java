@@ -36,18 +36,16 @@ public class AppointmentController {
     @PostMapping("/")
     public ResponseEntity<?> addAppointment(@RequestBody AppointmentRequestDTO appointmentDTO){
 
-        Doctor doctor = doctorRepository.findByFirstNameAndLastName(appointmentDTO.firstName(), appointmentDTO.lastName());
+        Doctor doctor = doctorRepository.findByEmail(appointmentDTO.emailDoctor());
         String patientEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Patient patient = patientRepository.findByEmail(patientEmail);
 
 
-        if(appointmentDTO.firstName().isBlank()){
+        if(appointmentDTO.emailDoctor().isBlank()){
             return new ResponseEntity<>("You have to complete the field firstName", HttpStatus.FORBIDDEN);
         }
 
-        if(appointmentDTO.lastName().isBlank()){
-            return new ResponseEntity<>("You have to complete the field lastName", HttpStatus.FORBIDDEN);
-        }
+
 
         if(appointmentDTO.time() == null){
             return new ResponseEntity<>("You have to complete the field time", HttpStatus.FORBIDDEN);
@@ -58,11 +56,7 @@ public class AppointmentController {
         }
 
         if(doctor == null){
-            return new ResponseEntity<>("There isn't any doctor with that name", HttpStatus.FORBIDDEN);
-        }
-
-        if(patient == null){
-            return new ResponseEntity<>("There isn't any patient with that id", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("There isn't any doctor with that email", HttpStatus.FORBIDDEN);
         }
 
         if(appointmentDTO.date().isBefore(LocalDate.now())){
@@ -86,7 +80,7 @@ public class AppointmentController {
 
         if(appointmentRepository.existsByDoctorAndDateAndTime(doctor, appointmentDTO.date(), appointmentDTO.time())){
             return new ResponseEntity<>("There isn't appointment available in " + appointmentDTO.date() + " at " +
-                    appointmentDTO.time() + "hs with the doctor " + appointmentDTO.firstName() + " " + appointmentDTO.lastName(), HttpStatus.OK);
+                    appointmentDTO.time() + "hs with the doctor " + doctor.getFirstName() + " " + doctor.getLastName(), HttpStatus.OK);
         }
 
 

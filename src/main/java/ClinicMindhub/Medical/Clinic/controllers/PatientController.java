@@ -5,8 +5,10 @@ import ClinicMindhub.Medical.Clinic.dto.LoginDTO;
 import ClinicMindhub.Medical.Clinic.dto.PatientDTO;
 import ClinicMindhub.Medical.Clinic.dto.RegisterDTO;
 import ClinicMindhub.Medical.Clinic.dto.RegisterDTO;
+import ClinicMindhub.Medical.Clinic.models.Admin;
 import ClinicMindhub.Medical.Clinic.models.Doctor;
 import ClinicMindhub.Medical.Clinic.models.Patient;
+import ClinicMindhub.Medical.Clinic.repositories.AdminRepository;
 import ClinicMindhub.Medical.Clinic.repositories.DoctorRepository;
 import ClinicMindhub.Medical.Clinic.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class PatientController {
 
     @Autowired
     DoctorRepository doctorRepository;
+
+    @Autowired
+    AdminRepository adminRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -91,6 +96,10 @@ public class PatientController {
             return new ResponseEntity<>("You can't use that email", HttpStatus.FORBIDDEN);
         }
 
+        if(registerDTO.email().contains("@admin")){
+            return new ResponseEntity<>("You can't use that email", HttpStatus.FORBIDDEN);
+        }
+
         if(patientRepository.findByEmail(registerDTO.email()) != null){
             return new ResponseEntity<>("There is a patient with that email", HttpStatus.FORBIDDEN);
         }
@@ -125,6 +134,23 @@ public class PatientController {
                 }
 
                 if(!passwordEncoder.matches(loginDTO.password(), doctor.getPassword())) {
+                    return new ResponseEntity<>("The password entered is not valid", HttpStatus.FORBIDDEN);
+                }
+
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
+                final UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.email());
+                final String jwt = jwtUtilService.generateToken(userDetails);
+                return ResponseEntity.ok(jwt);
+            }
+
+            if(loginDTO.email().contains("@admin")){
+                Admin admin = adminRepository.findByEmail(loginDTO.email());
+
+                if (admin == null) {
+                    return new ResponseEntity<>("The entered email is not valid", HttpStatus.FORBIDDEN);
+                }
+
+                if(!passwordEncoder.matches(loginDTO.password(), admin.getPassword())) {
                     return new ResponseEntity<>("The password entered is not valid", HttpStatus.FORBIDDEN);
                 }
 

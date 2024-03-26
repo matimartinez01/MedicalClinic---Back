@@ -53,26 +53,12 @@ public class DoctorController {
         return doctorRepository.findAll().stream().map(DoctorDTO::new).toList();
     }
 
-    @RequestMapping("/{id}")
-    public ResponseEntity<DoctorDTO> getDoctorById(Long id) {
-        Doctor doctor = doctorService.getDoctorById(id);
-
-        if (doctor == null) {
-            return new ResponseEntity<>(null , HttpStatus.NOT_FOUND);
-        }
-
-        DoctorDTO doctorDTO = new DoctorDTO(doctor);
-
-
-        return new ResponseEntity<>(doctorDTO, HttpStatus.OK);
+    @GetMapping("/current")
+    public ResponseEntity<?> getDoctor(){
+        String doctorEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Doctor doctor = doctorRepository.findByEmail(doctorEmail);
+        return new ResponseEntity<>(new DoctorDTO(doctor), HttpStatus.OK);
     }
-
-/*    @RequestMapping("/current")
-    public Doctor getCurrentDoctor() {
-        String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Doctor doctor = doctorService.getDoctorByEmail(userMail);
-        return ResponseEntity.ok(new DoctorDTO(doctor));
-    }*/
 
     @PostMapping("/register")
     public ResponseEntity<?> addPatient(@RequestBody RegisterDoctorDTO registerDoctorDTO){
@@ -127,7 +113,7 @@ public class DoctorController {
 
         doctorRepository.save(doctor);
 
-        return new ResponseEntity<>(doctor, HttpStatus.OK);
+        return new ResponseEntity<>(doctor, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -154,12 +140,7 @@ public class DoctorController {
         }
     }
 
-    @GetMapping("/current")
-    public ResponseEntity<?> getDoctor(){
-        String doctorEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Doctor doctor = doctorRepository.findByEmail(doctorEmail);
-        return new ResponseEntity<>(new DoctorDTO(doctor), HttpStatus.OK);
-    }
+
 
 
 }

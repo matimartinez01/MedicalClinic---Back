@@ -35,8 +35,8 @@ public class WebConfig {
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/doctor/login", "/api/patient/register", "/api/patient/login").permitAll()
-                        .requestMatchers("/api/patient/current", "/api/appointment/").hasRole("PATIENT")
-                        .requestMatchers("/api/doctor/all", "/api/patient/all", "/api/doctor/current").hasRole("DOCTOR")
+                        .requestMatchers("/api/patient/current", "/api/appointment/").hasAnyRole("PATIENT", "ADMIN")
+                        .requestMatchers("/api/doctor/all", "/api/patient/all", "/api/doctor/current").hasAnyRole("DOCTOR", "ADMIN")
                         .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
