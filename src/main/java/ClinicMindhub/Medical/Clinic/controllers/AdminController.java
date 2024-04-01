@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,6 +39,9 @@ public class AdminController {
 
     @Autowired
     PatientRepository patientRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public ResponseEntity<?> addAdmin(@RequestBody RegisterAdminDTO registerAdminDTO){
@@ -70,7 +74,7 @@ public class AdminController {
             return new ResponseEntity<>("The password needs be at least 6 characters length", HttpStatus.FORBIDDEN);
         }
 
-        Admin admin = new Admin(registerAdminDTO.firstName(), registerAdminDTO.lastName(), registerAdminDTO.email(), registerAdminDTO.password());
+        Admin admin = new Admin(registerAdminDTO.firstName(), registerAdminDTO.lastName(), registerAdminDTO.email(), passwordEncoder.encode(registerAdminDTO.password()));
 
         adminRepository.save(admin);
 

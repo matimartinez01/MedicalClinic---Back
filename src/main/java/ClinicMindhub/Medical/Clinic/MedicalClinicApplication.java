@@ -34,16 +34,22 @@ public class MedicalClinicApplication {
 		return args -> {
 
 			Patient prueba1 = new Patient("Guillermo", "Pérez", "guilleperez@gmail.com", passwordEncoder.encode("guille1234"), Genre.MALE, LocalDate.of(1990, 1, 1));
-			Doctor doctor = new Doctor("Juan", "Rodriguez", Genre.MALE, MedicalSpeciality.CARDIOLOGIST, List.of("MONDAY", "WEDNESDAY", "FRIDAY"), List.of(8, 9, 10, 11, 12), "juan@doctor.com", passwordEncoder.encode("Juan123"));
-			Appointment appointment = new Appointment(LocalDate.now(), LocalDateTime.now().getHour());
+			Doctor doctor = new Doctor("Juan", "Rodriguez", Genre.MALE, MedicalSpeciality.CARDIOLOGIST, List.of("MONDAY", "WEDNESDAY", "FRIDAY"), List.of(8, 9, 10, 11, 12, 16, 17, 18, 19, 20), "juan@doctor.com", passwordEncoder.encode("Juan123"));
+			Appointment appointment = new Appointment(LocalDate.now(), LocalDateTime.now().plusHours(2).getHour());
 			Admin admin = new Admin("Matias", "Martinez", "mati@admin.com", passwordEncoder.encode("Mati123"));
+			Appointment appointment2 = new Appointment(LocalDate.now().plusDays(2), LocalDateTime.now().plusHours(3).getHour());
+
+
 
 			prueba1.addAppointment(appointment);
+			prueba1.addAppointment(appointment2);
 			doctor.addAppointment(appointment);
+			doctor.addAppointment(appointment2);
 
 			patientRepository.save(prueba1);
 			doctorRepository.save(doctor);
 			appointmentRepository.save(appointment);
+			appointmentRepository.save(appointment2);
 			adminRepository.save(admin);
 
 			System.out.println(LocalDate.now().getDayOfWeek());

@@ -34,7 +34,7 @@ public class WebConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/doctor/login", "/api/patient/register", "/api/patient/login").permitAll()
+                        .requestMatchers("/api/doctor/login", "/api/patient/register", "/api/patient/login", "/api/doctor/all", "/api/doctor/specialities", "/api/form/send-email").permitAll()
                         .requestMatchers("/api/patient/current", "/api/appointment/").hasAnyRole("PATIENT", "ADMIN")
                         .requestMatchers("/api/doctor/all").hasAnyRole("PATIENT", "DOCTOR", "ADMIN")
                         .requestMatchers("/api/patient/all", "/api/doctor/current").hasAnyRole("DOCTOR", "ADMIN")

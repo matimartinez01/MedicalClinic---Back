@@ -15,6 +15,7 @@ public class PatientDTO {
     private Genre genre;
     private LocalDate birthDate;
     private List<AppointmentDTO> appointments = new ArrayList<>();
+    private String email;
 
     public PatientDTO(Patient patient) {
         this.id = patient.getId();
@@ -23,6 +24,7 @@ public class PatientDTO {
         this.genre = patient.getGenre();
         this.birthDate = patient.getBirthDate();
         this.appointments = patient.getAppointments().stream().map(AppointmentDTO::new).toList();
+        this.email = patient.getEmail();
     }
 
     public Long getId() {
@@ -47,5 +49,9 @@ public class PatientDTO {
 
     public List<AppointmentDTO> getAppointments() {
         return appointments;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

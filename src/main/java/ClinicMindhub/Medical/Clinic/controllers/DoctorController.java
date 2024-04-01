@@ -7,6 +7,7 @@ import ClinicMindhub.Medical.Clinic.dto.LoginDTO;
 import ClinicMindhub.Medical.Clinic.dto.RegisterDTO;
 import ClinicMindhub.Medical.Clinic.dto.RegisterDoctorDTO;
 import ClinicMindhub.Medical.Clinic.models.Doctor;
+import ClinicMindhub.Medical.Clinic.models.MedicalSpeciality;
 import ClinicMindhub.Medical.Clinic.models.Patient;
 import ClinicMindhub.Medical.Clinic.repositories.DoctorRepository;
 import ClinicMindhub.Medical.Clinic.services.DoctorService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -48,10 +50,16 @@ public class DoctorController {
     @Autowired
     JwtUtilService jwtUtilService;
 
-    @RequestMapping("/all")
+    @GetMapping("/all")
     public List<DoctorDTO> getAll() {
         return doctorRepository.findAll().stream().map(DoctorDTO::new).toList();
     }
+
+    @GetMapping("/specialities")
+    public List<MedicalSpeciality> getSpecialities(){
+        return Arrays.stream(MedicalSpeciality.values()).toList();
+         }
+
 
     @GetMapping("/current")
     public ResponseEntity<?> getDoctor(){

@@ -19,6 +19,8 @@ import static java.util.stream.Collectors.toList;
         private String firstName, lastName;
         private Genre genre;
         private MedicalSpeciality speciality;
+
+        private String email;
         private List<AppointmentDTO> appointments = new ArrayList<>();
         private List <String> workDays = new ArrayList<>();
 
@@ -32,6 +34,7 @@ import static java.util.stream.Collectors.toList;
             this.genre = doctor.getGenre();
             this.speciality = doctor.getSpeciality();
             this.appointments = doctor.getAppointments().stream().map(AppointmentDTO::new).collect(toList());
+            this.email = doctor.getEmail();
             this.workDays = doctor.getWorkDays();
             this.hours = doctor.getHours();
         }
@@ -67,6 +70,10 @@ import static java.util.stream.Collectors.toList;
 
         public List<Integer> getHours() {
             return hours;
+        }
+
+        public String getEmail() {
+            return email;
         }
 
         @Override
