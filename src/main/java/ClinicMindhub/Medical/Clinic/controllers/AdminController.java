@@ -1,9 +1,7 @@
 package ClinicMindhub.Medical.Clinic.controllers;
 
-import ClinicMindhub.Medical.Clinic.dto.AppointmentDTO;
-import ClinicMindhub.Medical.Clinic.dto.AppointmentRequestDTO;
-import ClinicMindhub.Medical.Clinic.dto.AppointmentRequestDTOAdmin;
-import ClinicMindhub.Medical.Clinic.dto.RegisterAdminDTO;
+import ClinicMindhub.Medical.Clinic.SecurityServices.JwtUtilService;
+import ClinicMindhub.Medical.Clinic.dto.*;
 import ClinicMindhub.Medical.Clinic.models.Admin;
 import ClinicMindhub.Medical.Clinic.models.Appointment;
 import ClinicMindhub.Medical.Clinic.models.Doctor;
@@ -15,7 +13,11 @@ import ClinicMindhub.Medical.Clinic.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,8 +42,18 @@ public class AdminController {
     @Autowired
     PatientRepository patientRepository;
 
+
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    UserDetailsService userDetailsService;
+
+    @Autowired
+    JwtUtilService jwtUtilService;
 
     @PostMapping("/register")
     public ResponseEntity<?> addAdmin(@RequestBody RegisterAdminDTO registerAdminDTO){
@@ -136,8 +148,6 @@ public class AdminController {
                     appointmentDTO.time() + "hs with the doctor " + doctor.getFirstName() + " " + doctor.getLastName(), HttpStatus.OK);
         }
 
-
-
         Appointment appointment = new Appointment(appointmentDTO.date(), appointmentDTO.time());
 
         doctor.addAppointment(appointment);
@@ -158,6 +168,38 @@ public class AdminController {
     public ResponseEntity<?> getAdmins(){
         List<Admin> admins = adminRepository.findAll();
         return new ResponseEntity<>(admins, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO) {
+        try {
+            Admin admin = adminRepository.findByEmail(loginDTO.email());
+
+            if (admin == null) {
+                return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
+            }
+
+            if(!passwordEncoder.matches(loginDTO.password(), admin.getPassword())) {
+                return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
+            }
+
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.email());
+            final String jwt = jwtUtilService.generateToken(userDetails);
+            return ResponseEntity.ok(jwt);
+
+        }
+        catch (Exception e){
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<?> getAdmin(){
+        String adminEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Admin admin = adminRepository.findByEmail(adminEmail);
+        return new ResponseEntity<>(new AdminDTO(admin), HttpStatus.OK);
     }
 
 

@@ -22,7 +22,7 @@ public class EmailController {
             SimpleMailMessage clinicMessage = new SimpleMailMessage();
             clinicMessage.setTo("equaino.ir@gmail.com");
             clinicMessage.setFrom("quai1921@hotmail.com");
-            clinicMessage.setSubject("New menssage from Clinic Mindhub");
+            clinicMessage.setSubject("New message from Serenety Health Center");
             clinicMessage.setText(
                     "Name: " + formDTO.firstName() + " " + formDTO.lastName() + "\n" +
                             "Phone: " + formDTO.phone() + "\n" +
@@ -31,13 +31,13 @@ public class EmailController {
                             "ZipCode: " + formDTO.zipCode() + "\n" +
                             "Discover: " + formDTO.discover() + "\n" +
                             "Live in Miami: " + formDTO.liveMiami() + "\n" +
-                            "Menssage: " + formDTO.message()
+                            "Message: " + formDTO.message()
             );
 
             SimpleMailMessage userMessage = new SimpleMailMessage();
             userMessage.setTo(formDTO.email());
             userMessage.setFrom("quai1921@hotmail.com");
-            userMessage.setSubject("Welcome to Clinic Mindhub");
+            userMessage.setSubject("Welcome to Serenety Health Center");
             userMessage.setText("Welcome " + formDTO.firstName() + ", we will contact you soon.");
 
 

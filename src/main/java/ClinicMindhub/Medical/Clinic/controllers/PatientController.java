@@ -1,14 +1,13 @@
 package ClinicMindhub.Medical.Clinic.controllers;
 
 import ClinicMindhub.Medical.Clinic.SecurityServices.JwtUtilService;
-import ClinicMindhub.Medical.Clinic.dto.LoginDTO;
-import ClinicMindhub.Medical.Clinic.dto.PatientDTO;
-import ClinicMindhub.Medical.Clinic.dto.RegisterDTO;
+import ClinicMindhub.Medical.Clinic.dto.*;
 import ClinicMindhub.Medical.Clinic.dto.RegisterDTO;
 import ClinicMindhub.Medical.Clinic.models.Admin;
 import ClinicMindhub.Medical.Clinic.models.Doctor;
 import ClinicMindhub.Medical.Clinic.models.Patient;
 import ClinicMindhub.Medical.Clinic.repositories.AdminRepository;
+import ClinicMindhub.Medical.Clinic.repositories.AppointmentRepository;
 import ClinicMindhub.Medical.Clinic.repositories.DoctorRepository;
 import ClinicMindhub.Medical.Clinic.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +51,15 @@ public class PatientController {
     @Autowired
     JwtUtilService jwtUtilService;
 
+    @Autowired
+    AppointmentRepository appointmentRepository;
+
     @GetMapping("/all")
-    public ResponseEntity getAllPatients(){
+    public ResponseEntity<?> getAllPatients(){
 
         List<PatientDTO> patients = patientRepository.findAll().stream().map(PatientDTO::new).toList();
 
-        return new ResponseEntity(patients, HttpStatus.OK);
+        return new ResponseEntity <>(patients, HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -130,11 +132,11 @@ public class PatientController {
                 Doctor doctor = doctorRepository.findByEmail(loginDTO.email());
 
                 if (doctor == null) {
-                    return new ResponseEntity<>("The entered email is not valid", HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
                 }
 
                 if(!passwordEncoder.matches(loginDTO.password(), doctor.getPassword())) {
-                    return new ResponseEntity<>("The password entered is not valid", HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
                 }
 
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
@@ -147,11 +149,11 @@ public class PatientController {
                 Admin admin = adminRepository.findByEmail(loginDTO.email());
 
                 if (admin == null) {
-                    return new ResponseEntity<>("The entered email is not valid", HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
                 }
 
                 if(!passwordEncoder.matches(loginDTO.password(), admin.getPassword())) {
-                    return new ResponseEntity<>("The password entered is not valid", HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
                 }
 
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
@@ -163,11 +165,11 @@ public class PatientController {
             Patient patient = patientRepository.findByEmail(loginDTO.email());
 
             if (patient == null) {
-                return new ResponseEntity<>("The entered email is not valid", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
             }
 
             if(!passwordEncoder.matches(loginDTO.password(), patient.getPassword())) {
-                return new ResponseEntity<>("The password entered is not valid", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("The entered email or password is not valid", HttpStatus.FORBIDDEN);
             }
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
@@ -188,6 +190,13 @@ public class PatientController {
 
         return new ResponseEntity<>(new PatientDTO(patient), HttpStatus.OK);
     }
+
+    @DeleteMapping("/deleteAppointment")
+    public ResponseEntity<?> deleteAppointment(@RequestBody DeleteAppointmentDTO deleteAppointmentDTO){
+        appointmentRepository.deleteById(deleteAppointmentDTO.id());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
 

@@ -34,10 +34,10 @@ public class WebConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/doctor/login", "/api/patient/register", "/api/patient/login", "/api/doctor/all", "/api/doctor/specialities", "/api/form/send-email").permitAll()
-                        .requestMatchers("/api/patient/current", "/api/appointment/").hasAnyRole("PATIENT", "ADMIN")
+                        .requestMatchers("/api/doctor/login", "/api/patient/register", "/api/patient/login", "/api/doctor/all", "/api/doctor/specialities", "/api/form/send-email", "/api/admin/login").permitAll()
+                        .requestMatchers("/api/patient/current", "/api/appointment/", "/api/patient/deleteAppointment").hasAnyRole("PATIENT", "ADMIN")
                         .requestMatchers("/api/doctor/all").hasAnyRole("PATIENT", "DOCTOR", "ADMIN")
-                        .requestMatchers("/api/patient/all", "/api/doctor/current").hasAnyRole("DOCTOR", "ADMIN")
+                        .requestMatchers("/api/patient/all", "/api/doctor/current", "api/admin/current").hasAnyRole("DOCTOR", "ADMIN")
                         .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
