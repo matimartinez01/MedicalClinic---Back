@@ -20,8 +20,8 @@ public class EmailController {
     public String sendEmail(@RequestBody FormDTO formDTO) {
         try {
             SimpleMailMessage clinicMessage = new SimpleMailMessage();
-            clinicMessage.setTo("equaino.ir@gmail.com");
-            clinicMessage.setFrom("quai1921@hotmail.com");
+            clinicMessage.setTo("skeremartinez@gmail.com");
+            clinicMessage.setFrom("skeremartinez@gmail.com");
             clinicMessage.setSubject("New message from Serenety Health Center");
             clinicMessage.setText(
                     "Name: " + formDTO.firstName() + " " + formDTO.lastName() + "\n" +
@@ -36,7 +36,7 @@ public class EmailController {
 
             SimpleMailMessage userMessage = new SimpleMailMessage();
             userMessage.setTo(formDTO.email());
-            userMessage.setFrom("quai1921@hotmail.com");
+            userMessage.setFrom("skeremartinez@hotmail.com");
             userMessage.setSubject("Welcome to Serenety Health Center");
             userMessage.setText("Welcome " + formDTO.firstName() + ", we will contact you soon.");
 
